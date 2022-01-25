@@ -1,9 +1,13 @@
 import axiosClient from './axiosClient';
 
 const userApi = {
-    getAll(params) {
+    getAll(params, config) {
         const url = `/users?${params}`;
-        return axiosClient.get(url);
+        return axiosClient.get(url, {
+            headers: {
+                ...config
+            }
+        });
     },
     detail(id, config) {
         const url = `/users/${id}`;
@@ -36,17 +40,12 @@ const userApi = {
         });
     },
     remove(id, config) {
-        console.log('🚀 ~ file: userApi.js ~ line 35 ~ remove ~ config', config);
         const url = `/users/${id}`;
         return axiosClient.delete(url, {
             headers: {
                 ...config
             }
         });
-    },
-    getUserByClassId(id) {
-        const url = `/users/class/${id}`;
-        return axiosClient.get(url);
     }
 };
 

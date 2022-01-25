@@ -1,10 +1,10 @@
 /* eslint-disable no-undef */
-import authApi from '../apiTest/authApi';
+import queryString from 'query-string';
 import userApi from '../apiTest/userApi';
-import { initDataAdmin, initDataInvalid, initDataUserInAdmin } from './initData/initData';
 import db from '../models/index';
 import createResponseCommon from '../ultils/createResponseCommon';
-import handleDeleteFile from '../ultils/removeFile';
+import { initDataInvalid, initDataUserInAdmin } from './initData/initData';
+import { seedAdminAndStorgeConfig } from './initData/seeder';
 
 const callApiEditUser = async (dataEdit, config) => {
     const formData = initDataInvalid(dataEdit);
@@ -21,29 +21,11 @@ const callApiAddUser = async (initData, config) => {
     return createResponseCommon(userApi.add(formData, config));
 };
 
-export const seedAdminAndStorgeConfig = async () => {
-    await db.User.sequelize.sync({ force: true });
-    const formData = initDataAdmin();
-    const res = await authApi.register(formData);
-    const { user } = res.data;
-    handleDeleteFile(user.avatar);
-    const tokenEmail = { id: user.id, token: user.tokenEmail };
-    await authApi.registerConfirm(tokenEmail);
-    const resLogin = await authApi.login({ email: 'hxt28499@gmail.com', password: '123456tT' });
-    const { access_token } = resLogin.data;
-    const config = {
-        Authorization: `Bearer ${access_token}`
-    };
-    return {
-        access_token,
-        config
-    };
-};
-
 describe('Api Create User For Admin', () => {
     let config = null;
     let initData = {};
     beforeAll(async () => {
+        await db.sequelize.sync({ force: true });
         const res = await seedAdminAndStorgeConfig();
         config = res.config;
     });
@@ -129,11 +111,15 @@ describe('Api Create User For Admin', () => {
         const res = await callApiAddUser(initData, config);
         expect(res.data.message).toEqual('"role" is required');
     });
+    afterAll(async () => {
+        await db.sequelize.sync({ force: true });
+    });
 });
 
 describe('Api Edit User For Admin', () => {
     let config = null;
     let initData = {};
+
     beforeAll(async () => {
         const res = await seedAdminAndStorgeConfig();
         config = res.config;
@@ -144,6 +130,18 @@ describe('Api Edit User For Admin', () => {
         expect(res.data).toEqual({
             status: true
         });
+    });
+
+    test('Get All User', async () => {
+        const filter = {
+            page: 1,
+            limit: 3
+        };
+        const params = queryString.stringify(filter);
+        const res = await createResponseCommon(userApi.getAll(params, config));
+        expect(res.data.records).toBeTruthy();
+        expect(res.data.pagination).toBeTruthy();
+        expect(res.data.pagination.total).toEqual(2);
     });
 
     test('Edit User With Error Fullname is Required', async () => {
@@ -214,6 +212,9 @@ describe('Api Edit User For Admin', () => {
             status: true
         });
     });
+    // beforeAll(async () => {
+    //     await db.sequelize.sync({ force: true });
+    // });
 });
 
 describe('Api Delete User For Admin', () => {
@@ -273,5 +274,8 @@ describe('Get Gender And Role Features', () => {
         const res = await createResponseCommon(userApi.getProperty());
         expect(res.data.roles).toBeTruthy();
         expect(res.data.genders).toBeTruthy();
+    });
+    afterAll(async () => {
+        await db.sequelize.close();
     });
 });

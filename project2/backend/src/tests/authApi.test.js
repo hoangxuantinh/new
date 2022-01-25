@@ -3,7 +3,7 @@ import authApi from '../apiTest/authApi';
 import { initDataUser, initDataInvalid, initDataInvalidForChangeProfile } from './initData/initData';
 import createResponseCommon from '../ultils/createResponseCommon';
 import db from '../models/index';
-import { seedAdminAndStorgeConfig } from './userApi.test';
+import { seedAdminAndStorgeConfig } from './initData/seeder';
 import handleDeleteFile from '../ultils/removeFile';
 
 const callApiRegister = async (initData) => {
@@ -19,6 +19,7 @@ describe('Api Auth Register', () => {
     test('User Register Success', async () => {
         const formData = initDataUser();
         const res = await authApi.register(formData);
+        console.log('🚀 ~ file: authApi.test.js ~ line 22 ~ test ~ res', res);
         handleDeleteFile(res.data.user.avatar);
         expect(res.data.user.avatar).toBeTruthy();
         expect(res.data.access_token).toBeTruthy();
@@ -216,11 +217,15 @@ describe('User Login after verify', () => {
         expect(res.data.refresh_token).toBeTruthy();
         expect(res.data.user).toBeTruthy();
     });
+    afterAll(async () => {
+        await db.sequelize.sync({ force: true });
+    });
 });
 
 describe('User Change Password', () => {
     let config = null;
     beforeAll(async () => {
+        await db.sequelize.sync({ force: true });
         const res = await seedAdminAndStorgeConfig();
         config = res.config;
     });
@@ -243,12 +248,16 @@ describe('User Change Password', () => {
             status: true
         });
     });
+    afterAll(async () => {
+        await db.sequelize.sync({ force: true });
+    });
 });
 
 describe('User Change Profile', () => {
     let config = null;
     let initData = {};
     beforeAll(async () => {
+        await db.sequelize.sync({ force: true });
         const res = await seedAdminAndStorgeConfig();
         config = res.config;
     });
@@ -303,11 +312,15 @@ describe('User Change Profile', () => {
         expect(res.data.status).toBeTruthy();
         expect(res.data.userInfor).toBeTruthy();
     });
+    afterAll(async () => {
+        await db.sequelize.sync({ force: true });
+    });
 });
 
 describe('User Get Profile And Logout ', () => {
     let config = null;
     beforeAll(async () => {
+        await db.sequelize.sync({ force: true });
         const res = await seedAdminAndStorgeConfig();
         config = res.config;
     });
@@ -332,5 +345,8 @@ describe('User Get Profile And Logout ', () => {
         const profile = await createResponseCommon(authApi.getLogin(config));
         expect(profile.status).toEqual(401);
         expect(profile.data.message).toEqual('Unauthorized');
+    });
+    afterAll(async () => {
+        await db.sequelize.sync({ force: true });
     });
 });

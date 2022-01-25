@@ -8,6 +8,7 @@ import db from '../models/index';
 
 describe('Api Get Register For Admin ', () => {
     let config = null;
+    let classId = null;
     beforeAll(async () => {
         const res = await SeederAdminAndCreateClass();
         config = res;
@@ -21,7 +22,9 @@ describe('Api Get Register For Admin ', () => {
         const data = { userId: user.id, classId: classCreated.id };
         const res = await createResponseCommon(registerApi.add(data, config));
         const register = await db.Register.findOne({
-            classId: classCreated.id
+            where: {
+                classId: classCreated.id
+            }
         });
         classCreated = await findClassByName('JavaScript Cơ Bản');
         const count = await db.Register.count();
@@ -57,7 +60,9 @@ describe('Api Confirm Register', () => {
         const data = { userId: user.id, classId: classCreated.id };
         const res = await createResponseCommon(registerApi.add(data, config));
         const register = await db.Register.findOne({
-            classId: classCreated.id
+            where: {
+                classId: classCreated.id
+            }
         });
         classCreated = await findClassByName('JavaScript Cơ Bản');
         const count = await db.Register.count();
@@ -87,8 +92,9 @@ describe('Api Confirm Register', () => {
 describe('Api Cancel Register For Admin', () => {
     let config = null;
     let classId = null;
-    let userId = null;
+    let userId;
     beforeAll(async () => {
+        await db.sequelize.sync({ force: true });
         const res = await SeederAdminAndCreateClass();
         config = res;
     });
@@ -102,7 +108,9 @@ describe('Api Cancel Register For Admin', () => {
         const data = { userId: user.id, classId: classCreated.id };
         const res = await createResponseCommon(registerApi.add(data, config));
         const register = await db.Register.findOne({
-            classId: classCreated.id
+            where: {
+                classId: classCreated.id
+            }
         });
         classCreated = await findClassByName('JavaScript Cơ Bản');
         const count = await db.Register.count();
@@ -135,10 +143,14 @@ describe('Api Cancel Register For Admin', () => {
         expect(currentClass.currentNumber).toEqual(0);
         expect(register).toBeFalsy();
     });
+    afterAll(async () => {
+        await db.sequelize.sync({ force: true });
+    });
 });
 
 describe('Search And Filter Register', () => {
     let config = null;
+    let userId = null;
     const filter = {
         limit: 4,
         page: 1,
@@ -146,6 +158,7 @@ describe('Search And Filter Register', () => {
         search: ''
     };
     beforeAll(async () => {
+        await db.sequelize.sync({ force: true });
         const res = await SeederAdminAndCreateClass();
         config = res;
     });
@@ -158,7 +171,9 @@ describe('Search And Filter Register', () => {
         const data = { userId: user.id, classId: classCreated.id };
         const res = await createResponseCommon(registerApi.add(data, config));
         const register = await db.Register.findOne({
-            classId: classCreated.id
+            where: {
+                classId: classCreated.id
+            }
         });
         classCreated = await findClassByName('JavaScript Cơ Bản');
         const count = await db.Register.count();
@@ -190,5 +205,8 @@ describe('Search And Filter Register', () => {
         expect(res.data.records).toBeTruthy();
         expect(res.data.records.length).toEqual(1);
         expect(res.data.pagination).toBeTruthy();
+    });
+    afterAll(async () => {
+        await db.sequelize.sync({ force: true });
     });
 });

@@ -4,7 +4,7 @@
   "description": "learn redis",
   "main": "index.js",
   "scripts": {
-    "test": "cross-env NODE_ENV=test jest --testTimeout=10000",
+    "test": "cross-env NODE_ENV=test jest --detectOpenHandles --testTimeout=10000 ",
     "migrate": "npx sequelize-cli db:migrate",
     "migrate:reset": "npx sequelize-cli db:migrate:undo:all && npm run migrate",
     "start": "nodemon --exec babel-node  ./src/server.js",

@@ -21,7 +21,9 @@ describe('Api Add Regitser For User', () => {
         const data = { userId: user.id, classId: classCreated.id };
         const res = await createResponseCommon(registerApi.add(data, config));
         const register = await db.Register.findOne({
-            classId: classCreated.id
+            where: {
+                classId: classCreated.id
+            }
         });
         classCreated = await findClassByName('JavaScript Cơ Bản');
         const count = await db.Register.count();
@@ -36,6 +38,10 @@ describe('Api Add Regitser For User', () => {
         const result = res.data.data;
         expect(result).toBeTruthy();
         expect(result[0].id).toEqual(classId);
+    });
+    it('User Cancel Register', async () => {
+        const res = await createResponseCommon(registerApi.remove(classId, config));
+        expect(res.data).toEqual({ status: true });
     });
     it('User Registation With Error Class Not Found', async () => {
         const user = await db.User.findOne({

@@ -17,14 +17,6 @@ const registerApi = {
             }
         });
     },
-    getCourseById(id, config) {
-        const url = `/registation/${id}`;
-        return axiosClient.get(url, {
-            headers: {
-                ...config
-            }
-        });
-    },
     remove(id, config) {
         const url = `/registation/client?id=${id}`;
         return axiosClient.delete(url, {

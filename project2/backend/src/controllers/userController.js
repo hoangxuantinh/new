@@ -63,6 +63,7 @@ export const addUser = async (req, res, next) => {
             }
         });
         if (checkUserIsExit) {
+            console.log('đã tồn tại');
             throw createError.Conflict(`${email} has already exist!`);
         }
         const passwordInServer = await hashPassword(password);

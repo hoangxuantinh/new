@@ -32,7 +32,7 @@ export const initDataUserInAdmin = () => {
     };
     const formData = new FormData();
     formData.append('user', JSON.stringify(initData));
-    formData.append('avatar', fs.createReadStream(`${appRoot}/public/images/avatar-1639293591501-993198529.jpg`));
+    formData.append('avatar', fs.createReadStream(`${appRoot}/src/tests/avatar/avatar-1639293591501-993198529.jpg`));
     return formData;
 };
 
@@ -49,21 +49,21 @@ export const initDataAdmin = () => {
     };
     const formData = new FormData();
     formData.append('user', JSON.stringify(initData));
-    formData.append('avatar', fs.createReadStream(`${appRoot}/public/images/avatar-1639293591501-993198529.jpg`));
+    formData.append('avatar', fs.createReadStream(`${appRoot}/src/tests/avatar/avatar-1639293591501-993198529.jpg`));
     return formData;
 };
 
 export const initDataInvalid = (initData = {}) => {
     const formData = new FormData();
     formData.append('user', JSON.stringify(initData));
-    formData.append('avatar', fs.createReadStream(`${appRoot}/public/images/avatar-1639293591501-993198529.jpg`));
+    formData.append('avatar', fs.createReadStream(`${appRoot}/src/tests/avatar/avatar-1639293591501-993198529.jpg`));
     return formData;
 };
 
 export const initDataInvalidForChangeProfile = (initData = {}) => {
     const formData = new FormData();
     formData.append('inforUser', JSON.stringify(initData));
-    formData.append('avatar', fs.createReadStream(`${appRoot}/public/images/avatar-1639293591501-993198529.jpg`));
+    formData.append('avatar', fs.createReadStream(`${appRoot}/src/tests/avatar/avatar-1639293591501-993198529.jpg`));
     return formData;
 };
 
@@ -77,7 +77,7 @@ export const initDataForCreatClass = () => {
     };
     const formData = new FormData();
     formData.append('newClass', JSON.stringify(initData));
-    formData.append('avatar', fs.createReadStream(`${appRoot}/public/images/avatar-1639293591501-993198529.jpg`));
+    formData.append('avatar', fs.createReadStream(`${appRoot}/src/tests/avatar/avatar-1639293591501-993198529.jpg`));
     return formData;
 };
 
@@ -103,7 +103,7 @@ export const initDataForEditClass = async () => {
 export const initDataInvalidForCreateClass = (initData = {}) => {
     const formData = new FormData();
     formData.append('newClass', JSON.stringify(initData));
-    formData.append('avatar', fs.createReadStream(`${appRoot}/public/images/avatar-1639293591501-993198529.jpg`));
+    formData.append('avatar', fs.createReadStream(`${appRoot}/src/tests/avatar/avatar-1639293591501-993198529.jpg`));
     return formData;
 };
 

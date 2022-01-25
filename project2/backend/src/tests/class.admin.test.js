@@ -1,12 +1,14 @@
 /* eslint-disable no-undef */
+/* eslint-disable import/no-cycle */
+
+import classApi from '../apiTest/classApi';
 import db from '../models/index';
-import { seedAdminAndStorgeConfig } from './userApi.test';
+import createResponseCommon from '../ultils/createResponseCommon';
 import {
     initDataForCreatClass, initDataInvalidForCreateClass,
-    initDataForEditClass, initDataInvalidForEditClass
+    initDataInvalidForEditClass, initDataForEditClass
 } from './initData/initData';
-import createResponseCommon from '../ultils/createResponseCommon';
-import classApi from '../apiTest/classApi';
+import { seedAdminAndStorgeConfig } from './initData/seeder';
 
 export const findClassByName = async (name) => {
     const findOne = await db.Class.findOne(
@@ -129,6 +131,43 @@ describe('Api Add Class for Admin', () => {
         const res = await callApiAddClass(initData, config);
         expect(res.data.message).toEqual('"maxNumber" must be greater than or equal to ref:currentNumber');
     });
+    afterAll(async () => {
+        await db.sequelize.sync({ force: true });
+    });
+});
+
+// Get Features
+describe('Api Get Day of Week And Times', () => {
+    let config = null;
+    beforeAll(async () => {
+        await db.Class.sequelize.sync({ force: true });
+        const res = await seedAdminAndStorgeConfig();
+        seedDayAndTime();
+        config = res.config;
+    });
+    test('Get day and Time success', async () => {
+        const res = await createResponseCommon(classApi.getFeatures(config));
+        expect(res.data.dayOfWeeks).toBeTruthy();
+        expect(res.data.timeList).toBeTruthy();
+    });
+});
+
+delete
+describe('Api Delete Class For Admin', () => {
+    let config = null;
+    beforeAll(async () => {
+        await db.sequelize.sync({ force: true });
+        const res = await seedAdminAndStorgeConfig();
+        seedDayAndTime();
+        config = res.config;
+    });
+    test('Delete Class Success', async () => {
+        const handleDeleteClass = await callApiDeleteClass(config);
+        expect(handleDeleteClass.res.data).toEqual({
+            status: true
+        });
+        expect(handleDeleteClass.currentClass).toBeFalsy();
+    });
 });
 
 // edit
@@ -137,7 +176,7 @@ describe('Api Edit Class for Admin', () => {
     let initData = {};
     let currentClass = null;
     beforeAll(async () => {
-        await db.Class.sequelize.sync({ force: true });
+        await db.sequelize.sync({ force: true });
         const res = await seedAdminAndStorgeConfig();
         seedDayAndTime();
         config = res.config;
@@ -149,6 +188,12 @@ describe('Api Edit Class for Admin', () => {
         expect(res.data).toEqual({ status: true });
         expect(currentClass).toBeTruthy();
     });
+
+    test('Get One Class', async () => {
+        const res = await createResponseCommon(classApi.getOne(currentClass.id, config));
+        expect(res.data.data).toBeTruthy();
+    });
+
     test('Edit Class Success', async () => {
         const formData = await initDataForEditClass();
         const res = await createResponseCommon(classApi.edit(currentClass.id, formData, config));
@@ -217,37 +262,8 @@ describe('Api Edit Class for Admin', () => {
         const res = await callApiEditClass(initData, config);
         expect(res.data.message).toEqual('"periods" is required');
     });
-});
 
-// Get Features
-describe('Api Get Day of Week And Times', () => {
-    let config = null;
-    beforeAll(async () => {
-        await db.Class.sequelize.sync({ force: true });
-        const res = await seedAdminAndStorgeConfig();
-        seedDayAndTime();
-        config = res.config;
-    });
-    test('Get day and Time success', async () => {
-        const res = await createResponseCommon(classApi.getFeatures(config));
-        expect(res.data.dayOfWeeks).toBeTruthy();
-        expect(res.data.timeList).toBeTruthy();
-    });
-});
-
-// delete
-describe('Api Delete Class For Admin', () => {
-    let config = null;
-    beforeAll(async () => {
-        const res = await seedAdminAndStorgeConfig();
-        seedDayAndTime();
-        config = res.config;
-    });
-    test('Delete Class Success', async () => {
-        const handleDeleteClass = await callApiDeleteClass(config);
-        expect(handleDeleteClass.res.data).toEqual({
-            status: true
-        });
-        expect(handleDeleteClass.currentClass).toBeFalsy();
+    afterAll(async () => {
+        await db.sequelize.sync({ force: true });
     });
 });

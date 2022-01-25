@@ -1,23 +1,17 @@
 import axiosClient from './axiosClient';
 
 const classApi = {
-    pagination(params) {
-        const url = `/classes?${params}`;
-        return axiosClient.get(url);
-    },
-    loadMore(params) {
-        const url = `/classes/all?${params}`;
-        return axiosClient.get(url);
-    },
     getFeatures(config) {
         const url = '/classes/features';
         return axiosClient.get(url, {
             headers: { ...config }
         });
     },
-    getOne(id) {
+    getOne(id, config) {
         const url = `/classes/${id}`;
-        return axiosClient.get(url);
+        return axiosClient.get(url, {
+            headers: { ...config }
+        });
     },
     add(data, config) {
         const url = '/classes';

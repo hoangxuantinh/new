@@ -1,13 +1,13 @@
 /* eslint-disable no-undef */
 import timeApi from '../apiTest/timeApi';
-import { seedUserAndConfig } from './initData/seeder';
+import { seedUserAndConfig, seedAdminAndStorgeConfig } from './initData/seeder';
 import db from '../models/index';
 import createResponseCommon from '../ultils/createResponseCommon';
-import { seedAdminAndStorgeConfig } from './userApi.test';
 
 describe('Api times for Admin', () => {
     let config = null;
     beforeAll(async () => {
+        await db.sequelize.sync({ force: true });
         const res = await seedAdminAndStorgeConfig();
         config = res.config;
     });
@@ -95,6 +95,9 @@ describe('Api times for Admin', () => {
         expect(res.status).toEqual(404);
         expect(res.data.message).toEqual('Time not found');
     });
+    afterAll(async () => {
+        await db.sequelize.sync({ force: true });
+    });
 });
 
 describe('Api times for User', () => {
@@ -130,6 +133,6 @@ describe('Api times for User', () => {
         expect(res.data.message).toEqual('Unauthorized');
     });
     afterAll(async () => {
-        await db.sequelize.close();
+        await db.sequelize.sync({ force: true });
     });
 });

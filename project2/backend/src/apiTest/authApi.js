@@ -3,6 +3,7 @@ import axiosClient from './axiosClient';
 const authApi = {
     register(data) {
         const url = '/auth/register';
+        console.log('header', { headers: data.getHeaders() });
         return axiosClient.post(url, data, { headers: data.getHeaders() });
     },
     registerConfirm(data) {
