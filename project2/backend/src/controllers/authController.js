@@ -13,13 +13,10 @@ export const register = async (req, res, next) => {
     try {
         const { user } = req.body;
         const fileSaveInServer = req?.file?.filename;
-        console.log('🚀 ~ file: authController.js ~ line 16 ~ register ~ fileSaveInServer', fileSaveInServer);
         const dataPlainFromClient = JSON.parse(user);
-        console.log('🚀 ~ file: authController.js ~ line 17 ~ register ~ dataPlainFromClient', dataPlainFromClient);
         const { error } = validateInforRegister(dataPlainFromClient);
 
         if (error) {
-            console.log('🚀 ~ file: authController.js ~ line 21 ~ register ~ error', error);
             handleDeteleFile(fileSaveInServer);
             throw createError(error.details[0].message);
         }
@@ -31,7 +28,6 @@ export const register = async (req, res, next) => {
                 email
             }
         });
-        console.log('🚀 ~ file: authController.js ~ line 33 ~ register ~ isExist', isExist);
         if (isExist) {
             handleDeteleFile(fileSaveInServer);
             throw createError.Conflict(`${email} has already exist`);
@@ -39,7 +35,6 @@ export const register = async (req, res, next) => {
 
         const passwordInServer = await hashPassword(password);
         const dt = new Date();
-        console.log('đén đây r nè');
         const newUser = await db.User.create({
             fullname,
             email,
@@ -53,10 +48,8 @@ export const register = async (req, res, next) => {
             avatar: fileSaveInServer,
             timeVerify: dt.setMinutes(dt.getMinutes() + 3)
         });
-        console.log('🚀 ~ file: authController.js ~ line 54 ~ register ~ newUser', newUser);
 
         const token = await signAccessToken(newUser.id);
-        console.log('🚀 ~ file: authController.js ~ line 57 ~ register ~ token', token);
         const refreshToken = await signRefreshToken(newUser.id);
         const message = {
             from: process.env.EMAIL_ADMIN,
@@ -68,13 +61,11 @@ export const register = async (req, res, next) => {
         };
         transporter.sendMail(message, (err, info) => {
             if (err) {
-                console.log('🚀 ~ file: authController.js ~ line 67 ~ transporter.sendMail ~ err', err);
                 throw createError.BadRequest('Wrong From St');
             } else {
                 console.log('Email sent: ', info);
             }
         });
-        console.log('thành công');
         res.json({
             access_token: token,
             refresh_token: refreshToken,

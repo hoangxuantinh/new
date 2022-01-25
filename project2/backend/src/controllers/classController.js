@@ -206,7 +206,6 @@ export const updateClass = async (req, res, next) => {
             throw createError(error.details[0].message);
         }
         if (checkTimeIsExist(periods)) {
-            console.log('lỗi ở đây');
             throw createError.BadRequest('Can\'t select same period time!');
         }
         const editClass = await db.Class.findOne({
@@ -233,7 +232,6 @@ export const updateClass = async (req, res, next) => {
             maxNumber,
             avatar: fileInServer || editClass.avatar
         });
-        console.log('vào đây r');
         res.json({
             status: true
         });

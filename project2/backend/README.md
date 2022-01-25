@@ -19,19 +19,17 @@ Project Demo (Registation Classes)
 If the installation was successful, you should be able to run the following command.
 
     $ node --version
-    $ npm --version
+    $ v16.13.1
    
-
-If you need to update `npm`, you can make it using `npm`! Cool right? After running the following command, just open again the command line and be happy.
-
-    $ npm install npm -g
-
 ### Yarn installation
   After installing node, this project will need yarn too, so just run the following command.
 
       $ npm install -g yarn
 
 ---
+## Prerequisites
+-Open Xampp Or WAMP
+-Create 2 New Database With Named [Class] For Develop And [Test] For Test Envirorment
 
 ## Install
 
@@ -39,14 +37,20 @@ If you need to update `npm`, you can make it using `npm`! Cool right? After runn
     $ cd project2/backend
     $ yarn install
 
+### Open Redis
+
+   - Open cmd run: $ redis-server
+
 ## Running the project
 
     $ yarn start
 
-### Open Redis
 
-   - Open cmd: $ redis-server
+### Sequelize Migrate
+
+    $ npx sequelize db:migrate // for develop
+    $ npx sequelize db:migrate --env test // for test
 
 ## Running Test
-    $ npx sequelize db:migrate --env test
+    
     $ yarn test --coverage

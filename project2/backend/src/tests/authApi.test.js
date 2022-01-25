@@ -19,7 +19,6 @@ describe('Api Auth Register', () => {
     test('User Register Success', async () => {
         const formData = initDataUser();
         const res = await authApi.register(formData);
-        console.log('🚀 ~ file: authApi.test.js ~ line 22 ~ test ~ res', res);
         handleDeleteFile(res.data.user.avatar);
         expect(res.data.user.avatar).toBeTruthy();
         expect(res.data.access_token).toBeTruthy();
