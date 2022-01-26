@@ -14,7 +14,7 @@ import routeMain from './routes/index.router';
 
 dotenv.config();
 const app = express();
-const PORT = process.env.PORT || 8000;
+const PORT = process.env.DEV_SERVER_PORT || 8000;
 
 configViewEngine(app);
 connectDb();

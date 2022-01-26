@@ -5,6 +5,7 @@ import db from '../models/index';
 import createResponseCommon from '../ultils/createResponseCommon';
 import { initDataInvalid, initDataUserInAdmin } from './initData/initData';
 import { seedAdminAndStorgeConfig } from './initData/seeder';
+import handleDeleteFile from '../ultils/removeFile';
 
 const callApiEditUser = async (dataEdit, config) => {
     const formData = initDataInvalid(dataEdit);
@@ -21,6 +22,16 @@ const callApiAddUser = async (initData, config) => {
     return createResponseCommon(userApi.add(formData, config));
 };
 
+const findUserAndDeleteAvatar = async () => {
+    const user = await db.User.findOne({
+        where: {
+            email: 'hxt284999@gmail.com'
+        },
+        raw: true
+    });
+    handleDeleteFile(user.avatar);
+};
+
 describe('Api Create User For Admin', () => {
     let config = null;
     let initData = {};
@@ -32,6 +43,7 @@ describe('Api Create User For Admin', () => {
     test('Create New User Success', async () => {
         const formData = initDataUserInAdmin();
         const res = await createResponseCommon(userApi.add(formData, config));
+        await findUserAndDeleteAvatar();
         expect(res.data).toEqual({
             status: true
         });
@@ -127,6 +139,7 @@ describe('Api Edit User For Admin', () => {
     test('Create New User Success', async () => {
         const formData = initDataUserInAdmin();
         const res = await createResponseCommon(userApi.add(formData, config));
+        await findUserAndDeleteAvatar();
         expect(res.data).toEqual({
             status: true
         });
@@ -212,9 +225,6 @@ describe('Api Edit User For Admin', () => {
             status: true
         });
     });
-    // beforeAll(async () => {
-    //     await db.sequelize.sync({ force: true });
-    // });
 });
 
 describe('Api Delete User For Admin', () => {
@@ -232,22 +242,25 @@ describe('Api Delete User For Admin', () => {
     });
 
     test('Delete User Success', async () => {
-        let user = await db.User.findOne({
+        const user = await db.User.findOne({
             where: {
                 email: 'hxt284999@gmail.com'
             }
         });
         const { id } = user;
         const res = await createResponseCommon(userApi.remove(id, config));
-        user = await db.User.findOne({
+        const userDeleted = await db.User.findOne({
             where: {
-                email: 'hxt284999@gmail.com'
+                id
             }
         });
-        expect(user).toBeFalsy();
+        expect(userDeleted).toBeFalsy();
         expect(res.data).toEqual({
             status: true
         });
+    });
+    afterAll(async () => {
+        await db.User.sequelize.sync({ force: true });
     });
 });
 
@@ -276,6 +289,6 @@ describe('Get Gender And Role Features', () => {
         expect(res.data.genders).toBeTruthy();
     });
     afterAll(async () => {
-        await db.sequelize.close();
+        await db.sequelize.sync({ force: true });
     });
 });

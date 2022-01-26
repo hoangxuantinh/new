@@ -10,6 +10,7 @@ export const seedUserAndConfig = async () => {
     const formData = initDataUser();
     const res = await authApi.register(formData);
     const { user } = res.data;
+    handleDeleteFile(user.avatar);
     const tokenEmail = { id: user.id, token: user.tokenEmail };
     await authApi.registerConfirm(tokenEmail);
     const resLogin = await authApi.login({ email: 'hxt28499@gmail.com', password: '123456tT' });
@@ -25,6 +26,7 @@ export const SeederAdminAndCreateClass = async () => {
     const formData = initDataAdmin();
     const res = await authApi.register(formData);
     const { user } = res.data;
+    handleDeleteFile(user.avatar);
     const tokenEmail = { id: user.id, token: user.tokenEmail };
     await authApi.registerConfirm(tokenEmail);
     const resLogin = await authApi.login({ email: 'hxt28499@gmail.com', password: '123456tT' });
@@ -35,6 +37,13 @@ export const SeederAdminAndCreateClass = async () => {
     await seedDayAndTime();
     const formDataClass = initDataForCreatClass();
     await classApi.add(formDataClass, config);
+    const newClass = await db.Class.findOne({
+        where: {
+            name: 'JavaScript Cơ Bản'
+        },
+        raw: true
+    });
+    handleDeleteFile(newClass.avatar);
     return config;
 };
 
@@ -43,6 +52,7 @@ export const seedAdminAndStorgeConfig = async () => {
     const formData = initDataAdmin();
     const res = await authApi.register(formData);
     const { user } = res.data;
+    const id = { user };
     handleDeleteFile(user.avatar);
     const tokenEmail = { id: user.id, token: user.tokenEmail };
     await authApi.registerConfirm(tokenEmail);
@@ -53,6 +63,7 @@ export const seedAdminAndStorgeConfig = async () => {
     };
     return {
         access_token,
-        config
+        config,
+        id
     };
 };

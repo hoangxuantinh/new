@@ -52,7 +52,7 @@ export const register = async (req, res, next) => {
         const token = await signAccessToken(newUser.id);
         const refreshToken = await signRefreshToken(newUser.id);
         const message = {
-            from: process.env.EMAIL_ADMIN,
+            from: process.env.EMAIL_SERVER,
             to: email,
             subject: 'Verify Email Madison',
             html: `<a href="${process.env.REACT_URL_CLIENT}/register/confirm?id=${newUser.id}&token=${newUser.tokenEmail}">

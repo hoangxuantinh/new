@@ -63,6 +63,7 @@ export const addUser = async (req, res, next) => {
             }
         });
         if (checkUserIsExit) {
+            handleDeteleFile(fileInServer);
             throw createError.Conflict(`${email} has already exist!`);
         }
         const passwordInServer = await hashPassword(password);
@@ -148,7 +149,7 @@ export const getUserById = async (req, res, next) => {
 
 export const editUser = async (req, res, next) => {
     try {
-        const fileInServer = req.file?.filename || null;
+        const fileInServer = req?.file?.filename || null;
         const { user } = req.body;
         const dataPlain = JSON.parse(user);
         const {
@@ -157,6 +158,7 @@ export const editUser = async (req, res, next) => {
         const { error } = validateInforUserUpdate(dataPlain);
 
         if (error) {
+            handleDeteleFile(fileInServer);
             throw createError(error.details[0].message);
         }
         const checkUserExist = await db.User.findOne({
@@ -171,7 +173,7 @@ export const editUser = async (req, res, next) => {
             address,
             gender,
             role,
-            avatar: fileInServer || checkUserExist.avatar
+            avatar: fileInServer || checkUserExist?.avatar
         }, {
             where: {
                 email

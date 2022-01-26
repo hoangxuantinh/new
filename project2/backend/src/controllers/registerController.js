@@ -271,7 +271,7 @@ export const confirmRegister = async (req, res, next) => {
         });
 
         const message = {
-            from: process.env.EMAIL_ADMIN,
+            from: process.env.EMAIL_SERVER,
             to: user.email,
             subject: `Thank to Register ${currentClass.name} Coure `,
             html: `<p>Your have register Coure From us</p>

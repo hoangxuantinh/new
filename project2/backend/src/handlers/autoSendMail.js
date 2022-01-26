@@ -27,7 +27,7 @@ export const autoSendMail = async () => {
             const hours = +(element.timeStart.slice(0, 2)) - 4;
             cron.schedule(`* ${hours} * * ${day}`, () => {
                 const message = {
-                    from: process.env.EMAIL_ADMIN,
+                    from: process.env.EMAIL_SERVER,
                     to: element.email,
                     subject: 'Thông báo lịch học',
                     html: `<p>Bạn sẽ có lớp học sau 4 tiếng nữa </p>
