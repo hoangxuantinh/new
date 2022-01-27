@@ -192,9 +192,9 @@ describe('Api Edit Class for Admin', () => {
         const formData = await initDataForEditClass();
         const res = await createResponseCommon(classApi.edit(currentClass.id, formData, config));
         const newClass = await findClassByName('JavaScript Nâng Cao');
-        currentClass = await findClassByName('JavaScript Cơ Bản');
+        const oldClass = await findClassByName('JavaScript Cơ Bản');
         expect(res.data).toEqual({ status: true });
-        expect(currentClass).toBeFalsy();
+        expect(oldClass).toBeFalsy();
         expect(newClass).toBeTruthy();
     });
 

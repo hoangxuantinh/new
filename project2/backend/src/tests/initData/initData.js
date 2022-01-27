@@ -16,7 +16,7 @@ export const initDataUser = () => {
     };
     const formData = new FormData();
     formData.append('user', JSON.stringify(initData));
-    formData.append('avatar', fs.createReadStream(`${appRoot}/public/images/avatar-1639293591501-993198529.jpg`));
+    formData.append('avatar', fs.createReadStream(`${appRoot}/src/tests/avatar/avatar-1639293591501-993198529.jpg`));
     return formData;
 };
 
