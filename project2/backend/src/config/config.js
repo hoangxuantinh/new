@@ -5,7 +5,7 @@ module.exports = {
         username: process.env.DB_SERVER_USERNAME,
         password: process.env.DB_SERVER_PASSWORD,
         database: process.env.DB_SERVER_DEVELOPMENT,
-        host: process.env.HOST_URL_SERVER,
+        host: process.env.DB_SERVER_HOST,
         dialect: 'mysql',
         logging: false
     },
@@ -13,7 +13,7 @@ module.exports = {
         username: process.env.DB_SERVER_USERNAME,
         password: process.env.DB_SERVER_PASSWORD,
         database: process.env.DB_SERVER_TEST,
-        host: process.env.HOST_URL_SERVER,
+        host: process.env.DB_SERVER_HOST,
         dialect: 'mysql',
         logging: false
     },
@@ -21,7 +21,7 @@ module.exports = {
         username: process.env.DB_SERVER_USERNAME,
         password: process.env.DB_PASSWORD,
         database: process.env.DB_NAME,
-        host: process.env.DB_HOST,
+        host: process.env.DB_SERVER_HOST,
         dialect: 'postgres',
         logging: false,
         pool: {

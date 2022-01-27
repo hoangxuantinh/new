@@ -22,7 +22,7 @@ const callApiAddUser = async (initData, config) => {
     return createResponseCommon(userApi.add(formData, config));
 };
 
-const findUserAndDeleteAvatar = async () => {
+export const findUserAndDeleteAvatar = async () => {
     const user = await db.User.findOne({
         where: {
             email: 'hxt284999@gmail.com'

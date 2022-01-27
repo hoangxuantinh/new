@@ -3,8 +3,15 @@ import { initDataUser, initDataForCreatClass, initDataAdmin } from './initData';
 import authApi from '../../apiTest/authApi';
 import classApi from '../../apiTest/classApi';
 import handleDeleteFile from '../../ultils/removeFile';
-import { seedDayAndTime } from '../class.admin.test';
 
+export const seedDayAndTime = async () => {
+    const initTime = [{ timeStart: '07:00', timeEnd: '09:00' }, { timeStart: '13:00', timeEnd: '15:00' }];
+    const initDay = [{ index: 0, name: 'sunday' }, { index: 1, name: 'monday' }];
+    await Promise.all([
+        await db.Times.bulkCreate(initTime),
+        await db.DayOfWeek.bulkCreate(initDay)
+    ]);
+};
 export const seedUserAndConfig = async () => {
     await db.User.sequelize.sync({ force: true });
     const formData = initDataUser();
